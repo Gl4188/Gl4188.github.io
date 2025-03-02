@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>吴凝20岁生日庆典🎉</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: '微软雅黑', cursive;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .container {
+            background: rgba(0,0,0,0.5);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 1rem;
+            color: #ff69b4;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .message {
+            font-size: 1.5em;
+            line-height: 1.6;
+            margin: 1.5rem 0;
+        }
+
+        .cake {
+            width: 300px;
+            margin: 2rem 0;
+            animation: pulse 2s infinite;
+        }
+
+        #uploadBtn {
+            padding: 10px 20px;
+            background: #ff69b4;
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 1rem;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(0.95); }
+        }
+    </style>
+</head>
+<body>
+    <input type="file" id="bgUpload" accept="image/*" hidden>
+    <div class="container">
+        <h1>🎂 吴凝20岁生日快乐！🎂</h1>
+        
+        <div class="message">
+            <p>致最美好的你：</p>
+            <p>二十岁的星空将为你闪耀，</p>
+            <p>青春的乐章在此刻达到高潮。</p>
+            <p>愿你的笑容如晨曦般永恒，</p>
+            <p>梦想如星河般璀璨闪耀。</p>
+            <p>每一岁都奔走在热爱里，</p>
+            <p>每一天都遇见更好的自己！✨</p>
+        </div>
+
+        <img src="https://example.com/cake.png" alt="生日蛋糕" class="cake"> <!-- 替换为实际蛋糕图片地址 -->
+        <br>
+        <button id="uploadBtn">上传专属背景</button>
+    </div>
+
+    <audio id="birthdayMusic" loop>
+        <source src="happy-birthday.mp3" type="audio/mpeg"> <!-- 准备生日音乐文件 -->
+    </audio>
+
+    <script>
+        // 背景图片上传
+        document.getElementById('uploadBtn').addEventListener('click', () => {
+            document.getElementById('bgUpload').click();
+        });
+
+        document.getElementById('bgUpload').addEventListener('change', function(e) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.body.style.backgroundImage = `url(${event.target.result})`;
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        });
+
+        // 自动播放音乐
+        window.addEventListener('click', () => {
+            const music = document.getElementById('birthdayMusic');
+            music.play();
+            document.querySelector('h1').innerHTML += ' 🎵';
+        }, { once: true });
+
+        // 随机祝福语
+        const messages = [
+            "二十而熠，青春正好！",
+            "愿你眼里永远有星辰大海",
+            "每一岁都能奔赴在自己的热爱里",
+            "美好都会在最后相遇",
+            "生日快乐，我的小太阳！☀️"
+        ];
+        
+        setInterval(() => {
+            document.querySelector('.message').style.animation = 'none';
+            setTimeout(() => {
+                document.querySelector('.message p:nth-child(3)').textContent = 
+                    messages[Math.floor(Math.random() * messages.length)];
+                document.querySelector('.message').style.animation = 'float 3s ease-in-out';
+            }, 10);
+        }, 5000);
+    </script>
+</body>
+</html>
