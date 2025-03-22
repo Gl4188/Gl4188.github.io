@@ -1,0 +1,166 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.8;
+    z-index: -1;
+}
+
+.container {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    width: 90%;
+}
+
+input {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 1.2em;
+}
+
+#cake {
+    margin-top: 20px;
+    width: 200px;
+    height: auto;
+    opacity: 0;
+    transition: opacity 1s ease;
+    transform: scale(0);
+    /* 删除重复的动画声明，只保留一个 */
+    animation: popIn 1s ease forwards;
+}
+
+.gift-button {
+    background-color: #ff69b4;
+    margin: 10px;
+    transition: transform 0.3s ease;
+}
+
+.gift-button:hover {
+    transform: scale(1.1);
+    background-color: #ff1493;
+}
+
+.wishes {
+    color: #ff69b4;
+    font-size: 1.5em;
+    margin: 20px 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.countdown {
+    font-size: 1.8em;
+    color: #ff4081;
+    margin: 20px 0;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.decorations {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.balloon {
+    position: absolute;
+    width: 100px;
+    height: auto;
+    animation: float 3s ease-in-out infinite;
+}
+
+.balloon-left {
+    left: -120px;
+    top: 20px;
+}
+
+.balloon-right {
+    right: -120px;
+    top: 20px;
+    animation-delay: 1.5s;
+}
+
+.gift {
+    width: 80px;
+    height: auto;
+    margin: 10px;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.gift-left {
+    transform: rotate(-15deg);
+}
+
+.gift-right {
+    transform: rotate(15deg);
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
