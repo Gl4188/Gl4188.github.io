@@ -7,7 +7,7 @@ function calculateDays() {
 
     // 检查是否是生日当天
     if (today.getMonth() === 2 && today.getDate() === 22) {
-        document.getElementById('result').innerText = "生日快乐！今天是你的生日！🎉";
+        document.getElementById('result').innerText = "生日快乐！🎉";
         showCake();
         showRandomWish();
     } else {
