@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, My Love! ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Noto+Sans+SC:wght@300;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #ff7eb9;
+            --secondary-color: #ffafbd;
+            --text-color: #4a4a4a;
+            --card-bg: rgba(255, 255, 255, 0.85);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            color: var(--text-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        #canvas-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: radial-gradient(circle at center, #fff0f5, #ffe6ea);
+        }
+        #intro-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            z-index: 9999; transition: opacity 1s ease;
+        }
+        .gift-box {
+            font-size: 80px; color: var(--primary-color); cursor: pointer;
+            animation: bounce 2s infinite; transition: transform 0.3s;
+        }
+        .gift-box:hover { transform: scale(1.1); }
+        .start-text { margin-top: 20px; font-size: 1.2rem; color: var(--primary-color); font-weight: 500; letter-spacing: 1px; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        
+        .container {
+            max-width: 800px; margin: 0 auto; padding: 40px 20px;
+            opacity: 0; transform: translateY(30px); transition: all 1.2s ease;
+        }
+        .container.show { opacity: 1; transform: translateY(0); }
+        
+        header { text-align: center; margin-bottom: 50px; }
+        h1 {
+            font-family: 'Dancing Script', cursive; font-size: 4rem;
+            color: var(--primary-color); text-shadow: 2px 2px 4px rgba(0,0,0,0.1); margin-bottom: 10px;
+        }
+        .subtitle { font-size: 1.1rem; color: #888; letter-spacing: 2px; }
+        
+        .timer-card {
+            background: var(--card-bg); padding: 25px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 126, 185, 0.2); text-align: center;
+            margin-bottom: 50px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5);
+        }
+        .timer-display {
+            font-size: 1.6rem; font-weight: bold; color: var(--primary-color);
+            margin-top: 10px; font-family: 'Dancing Script', cursive;
+        }
+        
+        .gallery-section { margin-bottom: 60px; }
+        .section-title {
+            text-align: center; font-size: 2rem; margin-bottom: 40px;
+            color: var(--primary-color); position: relative; display: inline-block;
+            left: 50%; transform: translateX(-50%);
+        }
+        .section-title::after {
+            content: ''; display: block; width: 60px; height: 4px;
+            background: var(--secondary-color); margin: 10px auto 0; border-radius: 2px;
+        }
+        .photo-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px;
+        }
+        .photo-item {
+            background: white; padding: 10px 10px 40px 10px; border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15); transition: transform 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer; position: relative; transform: rotate(-2deg);
+        }
+        .photo-item:nth-child(even) { transform: rotate(2deg); }
+        .photo-item:hover {
+            transform: scale(1.05) rotate(0deg); box-shadow: 0 15px 30px rgba(0,0,0,0.2); z-index: 10;
+        }
+        .photo-item img {
+            width: 100%; height: 220px; object-fit: cover; border-radius: 2px; display: block;
+        }
+        .photo-caption {
+            position: absolute; bottom: 10px; left: 0; width: 100%; text-align: center;
+            font-family: 'Dancing Script', cursive; font-size: 1.4rem; color: #555;
+        }
+        
+        .letter-section {
+            background: var(--card-bg); padding: 40px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 50px;
+            backdrop-filter: blur(10px); position: relative;
+        }
+        .letter-content { font-size: 1.15rem; line-height: 2; color: #444; white-space: pre-wrap; min-height: 100px; }
+        .cursor {
+            display: inline-block; width: 2px; height: 1.2em;
+            background-color: var(--primary-color); animation: blink 1s infinite; vertical-align: middle;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        
+        .interaction-area { text-align: center; margin-bottom: 60px; }
+        .magic-btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none; padding: 15px 45px; color: white; font-size: 1.2rem;
+            border-radius: 50px; cursor: pointer; box-shadow: 0 5px 20px rgba(255, 126, 185, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s; outline: none; font-weight: bold;
+        }
+        .magic-btn:active { transform: scale(0.95); }
+        
+        .music-control {
+            position: fixed; bottom: 25px; right: 25px; background: white;
+            width: 50px; height: 50px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15); cursor: pointer; z-index: 100;
+            color: var(--primary-color); font-size: 1.2rem; transition: transform 0.3s;
+        }
+        .music-control.playing { animation: spin 3s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 2000;
+            justify-content: center; align-items: center; backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: white; padding: 40px; border-radius: 20px; text-align: center;
+            max-width: 90%; width: 400px; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #aaa; }
+        
+        @media (max-width: 600px) {
+            h1 { font-size: 2.8rem; } .photo-grid { grid-template-columns: 1fr; } .letter-section { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas-bg"></canvas>
+
+    <!-- 开场遮罩 -->
+    <div id="intro-overlay">
+        <div class="gift-box" onclick="startExperience()">
+            <i class="fas fa-gift"></i>
+        </div>
+        <div class="start-text">点击拆开给你的专属惊喜</div>
+    </div>
+
+    <!-- 音乐播放器：请确保同目录下有 music.mp3，或者保留默认网络链接 -->
+    <audio id="bg-music" loop>
+        <!-- 如果你有本地音乐文件，取消下面这行的注释，并确保文件名为 music.mp3 -->
+        <!-- <source src="music.mp3" type="audio/mpeg"> -->
+        
+        <!-- 默认使用网络链接 (如果本地没文件就用这个) -->
+        <source src="https://music.163.com/song/media/outer/url?id=1824045033.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="music-control" onclick="toggleMusic()" title="播放/暂停音乐">
+        <i class="fas fa-music" id="music-icon"></i>
+    </div>
+
+    <div class="container" id="main-content">
+        <header>
+            <h1>Happy Birthday!</h1>
+            <div class="subtitle">To My Dearest Girlfriend</div>
+            <p style="margin-top: 15px; color: #666; font-size: 0.9rem;">2026.03.22</p>
+        </header>
+
+        <div class="timer-card">
+            <div>我们已经甜蜜相伴</div>
+            <div class="timer-display" id="love-timer">加载中...</div>
+            <div style="font-size: 0.8rem; color: #999; margin-top: 8px;">每一秒都因你而珍贵</div>
+        </div>
+
+        <section class="gallery-section">
+            <h2 class="section-title">我们的独家记忆</h2>
+            <div class="photo-grid">
+                <!-- 
+                   ⚠️ 关键修改处：
+                   1. 把你的照片重命名为 photo1.jpg, photo2.jpg 等
+                   2. 确保文件名后缀正确 (jpg 或 png)
+                   3. 如果照片名字不一样，请修改 src="你的名字.png"
+                -->
+                <div class="photo-item">
+                    <img src="photo1.jpg" alt="Memory 1" onerror="this.src='https://images.unsplash.com/photo-1516961642265-531546e84af2?auto=format&fit=crop&w=500&q=80'">
+                    <div class="photo-caption">第一次约会</div>
+                </div>
+                <div class="photo-item">
+                    <img src="photo2.jpg" alt="Memory 2" onerror="this.src='https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=500&q=80'">
+                    <div class="photo-caption">一起去旅行</div>
+                </div>
+                <div class="photo-item">
+                    <img src="photo3.jpg" alt="Memory 3" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=500&q=80'">
+                    <div class="photo-caption">搞怪瞬间</div>
+                </div>
+                <div class="photo-item">
+                    <img src="photo4.jpg" alt="Memory 4" onerror="this.src='https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=500&q=80'">
+                    <div class="photo-caption">温馨晚餐</div>
+                </div>
+                <div class="photo-item">
+                    <img src="photo5.jpg" alt="Memory 5" onerror="this.src='https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=500&q=80'">
+                    <div class="photo-caption">去年的今天</div>
+                </div>
+                <div class="photo-item">
+                    <img src="photo6.jpg" alt="Memory 6" onerror="this.src='https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=500&q=80'">
+                    <div class="photo-caption">未来的我们</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="letter-section">
+            <h2 class="section-title">写给亲爱的你</h2>
+            <div class="letter-content" id="typewriter"></div><span class="cursor"></span>
+        </section>
+
+        <section class="interaction-area">
+            <button class="magic-btn" onclick="showSurprise()">🎁 点击领取生日愿望</button>
+        </section>
+
+        <footer style="text-align: center; color: #999; font-size: 0.8rem; padding-bottom: 30px;">
+            Made with ❤️ by Your Boyfriend
+        </footer>
+    </div>
+
+    <div class="modal" id="surprise-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeSurprise()">&times;</span>
+            <h2 style="color: var(--primary-color); margin-bottom: 15px; font-family: 'Dancing Script'; font-size: 2.5rem;">Happy Birthday!</h2>
+            <p style="margin-bottom: 20px; line-height: 1.6;">愿你的每一天都像今天一样闪闪发光！<br>今年的愿望是：<strong>我们要一直一直在一起！</strong></p>
+            <div style="font-size: 3rem; margin: 20px 0;">👩‍❤️‍👨✨🎂</div>
+            <p style="font-size: 0.9rem; color: #888;">(点击任意处或右上角关闭)</p>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            // ✅ 已更新为你提供的日期：2025年7月4日
+            startDate: '2025-07-04', 
+            
+            loveLetter: "亲爱的宝贝：\n\n生日快乐！🎂\n\n从2025年7月4日那天开始，我的世界因为有你而变得完全不同。回想起我们走过的点点滴滴，每一次欢笑、每一次拥抱，都深深地印在我的脑海里。\n\n谢谢你出现在我的生命里。虽然这个网站很简单，但它承载了我对你满满的爱意。\n\n愿新的一岁，你所有的梦想都能开花结果，愿你的笑容永远像今天一样灿烂。\n\n无论未来如何，我都会一直陪在你身边，牵着你的手，走过春夏秋冬。\n\n永远爱你的，\n[你的名字]",
+            
+            typingSpeed: 100 
+        };
+
+        function startExperience() {
+            const overlay = document.getElementById('intro-overlay');
+            const mainContent = document.getElementById('main-content');
+            const music = document.getElementById('bg-music');
+
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                mainContent.classList.add('show');
+                
+                music.play().then(() => {
+                    document.querySelector('.music-control').classList.add('playing');
+                    document.getElementById('music-icon').className = 'fas fa-pause';
+                }).catch(e => {
+                    console.log("自动播放被拦截");
+                    document.getElementById('music-icon').className = 'fas fa-play';
+                });
+                
+                typeWriterEffect();
+            }, 1000);
+        }
+
+        let isPlaying = false;
+        function toggleMusic() {
+            const music = document.getElementById('bg-music');
+            const icon = document.getElementById('music-icon');
+            const btn = document.querySelector('.music-control');
+
+            if (music.paused) {
+                music.play();
+                icon.className = 'fas fa-pause';
+                btn.classList.add('playing');
+            } else {
+                music.pause();
+                icon.className = 'fas fa-play';
+                btn.classList.remove('playing');
+            }
+        }
+
+        function updateTimer() {
+            const start = new Date(CONFIG.startDate);
+            const now = new Date();
+            const diff = now - start;
+
+            if (diff < 0) {
+                document.getElementById('love-timer').innerHTML = "期待我们的开始...";
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('love-timer').innerHTML = 
+                `${days} 天 ${hours} 小时 ${minutes} 分 ${seconds} 秒`;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        function typeWriterEffect() {
+            const text = CONFIG.loveLetter;
+            const element = document.getElementById('typewriter');
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    const char = text.charAt(i);
+                    if (char === '\n') element.innerHTML += '<br>';
+                    else element.innerHTML += char;
+                    i++;
+                    setTimeout(type, CONFIG.typingSpeed);
+                }
+            }
+            type();
+        }
+
+        function showSurprise() {
+            document.getElementById('surprise-modal').style.display = 'flex';
+            createHearts();
+        }
+        function closeSurprise() {
+            document.getElementById('surprise-modal').style.display = 'none';
+        }
+        document.getElementById('surprise-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeSurprise();
+        });
+
+        function createHearts() {
+            for(let i=0; i<40; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '❤️';
+                    heart.style.position = 'fixed';
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.top = '-10vh';
+                    heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                    heart.style.animation = `fall ${Math.random() * 2 + 2}s linear`;
+                    heart.style.zIndex = '1000';
+                    heart.style.pointerEvents = 'none';
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 4000);
+                }, i * 100);
+            }
+        }
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = `@keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }`;
+        document.head.appendChild(styleSheet);
+
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+                this.color = `rgba(255, ${126 + Math.random() * 50}, ${185 + Math.random() * 50}, ${Math.random() * 0.4 + 0.1})`;
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY;
+                if (this.size > 0.2) this.size -= 0.005; 
+                if (this.size <= 0.2 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 3 + 1;
+                }
+            }
+            draw() { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+        }
+        function initParticles() { for (let i = 0; i < 60; i++) particles.push(new Particle()); }
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) { particles[i].update(); particles[i].draw(); }
+            requestAnimationFrame(animateParticles);
+        }
+        initParticles(); animateParticles();
+    </script>
+</body>
+</html>
